@@ -404,94 +404,96 @@ function renderResults(data) {
         // Ilvl
         const ilvlTd = document.createElement('td');
         ilvlTd.textContent = row.ilvl;
+        ilvlTd.className = 'val-ilvl';
+        ilvlTd.dataset.label = 'iLvl';
 
         // World
         const worldTd = document.createElement('td');
         worldTd.textContent = row.world;
-        worldTd.style.color = '#79c0ff'; // Light blue for world
+        worldTd.className = 'val-world';
+        worldTd.dataset.label = 'World';
 
         // HQ
         const hqTd = document.createElement('td');
+        hqTd.dataset.label = 'HQ';
         if (row.hq) {
-             hqTd.innerHTML = '<span style="color: #fdaeb7; font-weight: bold;">HQ</span>'; // Pinkish for HQ
+             hqTd.innerHTML = '<span class="badge-hq">HQ</span>';
         } else {
              hqTd.textContent = '-';
-             hqTd.style.color = '#484f58';
+             hqTd.className = 'val-nq';
         }
 
         // Price
         const priceTd = document.createElement('td');
         priceTd.textContent = row.price.toLocaleString() + ' g';
-        priceTd.style.color = '#e6edf3';
-        priceTd.style.fontWeight = 'bold';
+        priceTd.className = 'val-price';
+        priceTd.dataset.label = 'Price';
 
         // Stock
         const stockTd = document.createElement('td');
-        // Display: "1 (of 5)" or just "1" with tooltip?
-        // User wants clarity.
+        stockTd.dataset.label = 'Stock';
         if (row.stock === row.totalStock) {
              stockTd.textContent = row.stock.toLocaleString();
-             stockTd.title = `${row.stock} available at this price on ${row.world}.`;
+             stockTd.title = `${row.stock} available.`;
         } else {
-             // Show "StockAtPrice / RelevantStock"
-             stockTd.innerHTML = `${row.stock.toLocaleString()} <span style="font-size:0.8em; opacity:0.7;">(Tot: ${row.totalStock})</span>`;
-             stockTd.title = `${row.stock} available at ${row.price.toLocaleString()}g.\n${row.totalStock} total relevant items visible (matching your quality filter).`;
+             stockTd.textContent = `${row.stock}/${row.totalStock}`;
+             stockTd.title = `${row.stock} at this price, ${row.totalStock} total.`;
         }
-        stockTd.style.color = '#8b949e';
+        stockTd.className = 'val-stock';
 
         // Seals
         const sealsTd = document.createElement('td');
         sealsTd.textContent = row.seals.toLocaleString();
-        sealsTd.style.color = '#238636';
+        sealsTd.className = 'val-seals';
+        sealsTd.dataset.label = 'Seals';
 
         // FC Points
         const fcTd = document.createElement('td');
         fcTd.textContent = row.fcPoints.toLocaleString();
-        fcTd.style.color = '#a371f7'; // Purple-ish for FC
+        fcTd.className = 'val-fc';
+        fcTd.dataset.label = 'FC Pts';
         if (row.hq) {
-            fcTd.style.fontWeight = 'bold';
+            fcTd.classList.add('is-hq');
             fcTd.title = 'Doubled due to HQ!';
         }
 
         // Efficiency
         const ratioTd = document.createElement('td');
         ratioTd.textContent = row.ratio.toFixed(2);
-        ratioTd.style.fontWeight = 'bold';
+        ratioTd.className = 'val-eff';
+        ratioTd.dataset.label = 'Efficiency';
         
-        // Color code efficiency
-        if (row.ratio > 0.4) ratioTd.style.color = '#238636'; // Excellent
-        else if (row.ratio > 0.3) ratioTd.style.color = '#d29922'; // Good
-        else ratioTd.style.color = '#f85149'; // Bad
+        // Color code efficiency using classes
+        if (row.ratio > 0.4) ratioTd.classList.add('eff-excellent');
+        else if (row.ratio > 0.3) ratioTd.classList.add('eff-good');
+        else ratioTd.classList.add('eff-bad');
 
         // Market Button (Universalis)
         const marketTd = document.createElement('td');
+        marketTd.dataset.label = 'Market';
         const marketLink = document.createElement('a');
         marketLink.href = `https://universalis.app/market/${row.id}`;
         marketLink.target = '_blank';
+        marketLink.className = 'icon-btn market-btn';
         marketLink.title = 'Open on Universalis';
         
-        const marketIcon = document.createElement('img');
-        // Universalis Icon
-        marketIcon.src = 'assets/universalis_icon.svg'; 
-        marketIcon.style.width = '24px';
-        marketIcon.style.height = '24px';
-        marketIcon.style.borderRadius = '4px';
-        marketIcon.style.transition = 'transform 0.2s';
-        
-        marketIcon.onmouseover = () => marketIcon.style.transform = 'scale(1.2)';
-        marketIcon.onmouseout = () => marketIcon.style.transform = 'scale(1)';
+        // Shopping Bag SVG
+        marketLink.innerHTML = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
+          <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z"/>
+        </svg>`;
 
-        marketLink.appendChild(marketIcon);
         marketTd.appendChild(marketLink);
 
         // Copy Button
         const actionTd = document.createElement('td');
+        actionTd.dataset.label = 'Action';
         const copyBtn = document.createElement('button');
-        copyBtn.className = 'copy-btn';
+        copyBtn.className = 'icon-btn copy-btn';
         copyBtn.title = "Copy Item Name";
         // SVG Icon (Clipboard)
         copyBtn.innerHTML = `
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
                 <path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1v-1z"/>
                 <path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5h3zm-3-1A1.5 1.5 0 0 0 5 1.5v1A1.5 1.5 0 0 0 6.5 4h3A1.5 1.5 0 0 0 11 2.5v-1A1.5 1.5 0 0 0 9.5 0h-3z"/>
             </svg>

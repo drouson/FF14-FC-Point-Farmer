@@ -1,4 +1,4 @@
-const BASE_URL = 'https://v2.xivapi.com/api';
+const BASE_URL = '/api_proxy';
 
 /**
  * Searches for tradeable, green/blue items above a certain ilvl.
@@ -72,6 +72,18 @@ export async function searchTurningItems(minIlvl) {
                 }
             }
 
+            // Handle Category ID
+            let catId = props.ItemSearchCategory;
+            if (catId && typeof catId === 'object') {
+                catId = catId.value || catId.id || catId.row_id;
+            }
+
+            // Handle EquipSlot ID
+            let equipId = props.EquipSlotCategory;
+            if (equipId && typeof equipId === 'object') {
+                equipId = equipId.value || equipId.id || equipId.row_id;
+            }
+
             return {
                 ID: item.row_id,
                 Name: props.Name,
@@ -79,8 +91,8 @@ export async function searchTurningItems(minIlvl) {
                 Icon: iconPath,
                 Rarity: props.Rarity,
                 IsUntradable: props.IsUntradable,
-                Category: props.ItemSearchCategory,
-                EquipSlot: props.EquipSlotCategory
+                Category: catId,
+                EquipSlot: equipId
             };
         }).filter(item => {
             // Client-side filtering
@@ -91,12 +103,9 @@ export async function searchTurningItems(minIlvl) {
             if (item.IsUntradable === 1 || item.IsUntradable === true) return false;
             
             // MUST be equipment to be turned in for Expert Delivery
-            // If EquipSlotCategory is missing or null, it's a material/consumable.
-            // Also check if it's an empty object (some APIs return {id:0} for none)
             if (!item.EquipSlot) return false;
-            if (typeof item.EquipSlot === 'object' && item.EquipSlot.id === undefined) return false; // Safety
 
-            if (!item.Category || item.Category.id < 1) return false;
+            if (!item.Category || item.Category < 1) return false;
             return true;
         });
         
