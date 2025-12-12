@@ -472,7 +472,7 @@ function renderResults(data) {
         
         const marketIcon = document.createElement('img');
         // Universalis Icon
-        marketIcon.src = 'universalis_icon.svg'; 
+        marketIcon.src = 'assets/universalis_icon.svg'; 
         marketIcon.style.width = '24px';
         marketIcon.style.height = '24px';
         marketIcon.style.borderRadius = '4px';
