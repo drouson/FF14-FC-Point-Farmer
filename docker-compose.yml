@@ -1,0 +1,10 @@
+version: '3'
+services:
+  ff14-gc-tool:
+    build: .
+    image: ff14-gc-tool
+    ports:
+      - "8081:80"
+    volumes:
+      - ./:/usr/share/nginx/html # Hot reload for development (optional)
+    restart: always

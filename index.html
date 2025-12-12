@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FF14 FC Point Farmer</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <canvas id="bg-canvas"></canvas>
+    <div class="app-container">
+        <header>
+            <h1>FF14 FC Point Farmer</h1>
+            <p class="subtitle">Find the cheapest Expert Delivery turn-ins to power-level your Free Company.</p>
+        </header>
+
+        <section class="controls">
+            <!-- Region / DC / World Selection -->
+            <div class="control-group">
+                <label for="region-select">Region</label>
+                <select id="region-select"></select>
+            </div>
+
+            <div class="control-group">
+                <label for="dc-select">Data Center</label>
+                <select id="dc-select"></select>
+            </div>
+
+            <div class="control-group">
+                <label for="world-select">World</label>
+                <select id="world-select">
+                    <option value="all">Entire DC (Cheapest!)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="min-ilvl">Min Item Level</label>
+                <select id="min-ilvl">
+                    <option value="1">Any Level (Broad Search)</option>
+                    <option value="390">390+ (Lvl 70 - Stormblood)</option>
+                    <option value="430">430+ (Lvl 80 - Shadowbringers)</option>
+                    <option value="510">510+ (Lvl 80 - Exarchic)</option>
+                    <option value="550">550+ (Endwalker Start)</option>
+                    <option value="580">580+ (Classical)</option>
+                    <option value="610">610+ (Rinascita)</option>
+                    <option value="640" selected>640+ (Diadochos)</option>
+                    <option value="690">690+ (Dawntrail Start)</option>
+                    <option value="710">710+ (Archeo Kingdom)</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="min-stock">Min Stock</label>
+                <input type="number" id="min-stock" value="1" min="1" style="width: 100%;">
+            </div>
+
+            <div class="control-group">
+                <label for="min-fc-points">Min FC Pts</label>
+                <input type="number" id="min-fc-points" placeholder="0" min="0" style="width: 100%;">
+            </div>
+
+            <div class="control-group">
+                <label for="hq-filter">Quality</label>
+                <select id="hq-filter">
+                    <option value="any">Any</option>
+                    <option value="nq">NQ Only</option>
+                    <option value="hq">HQ Only</option>
+                </select>
+            </div>
+
+            <div class="control-group">
+                <label for="min-efficiency">Min Efficiency</label>
+                <select id="min-efficiency">
+                    <option value="0">All</option>
+                    <option value="0.3">Good (> 0.3)</option>
+                    <option value="0.4" selected>Excellent (> 0.4)</option>
+                </select>
+            </div>
+
+            <!-- Toggle Switch for Favorites -->
+            <div class="control-group checkbox-group">
+                <label for="fav-filter" style="cursor: pointer;">Favorites Only</label>
+                <label class="toggle-switch">
+                    <input type="checkbox" id="fav-filter">
+                    <span class="slider"></span>
+                </label>
+            </div>
+
+
+            <button id="search-btn" class="primary-btn">Find Deals</button>
+        </section>
+
+        <section class="results-section">
+            <div id="status-msg" class="status-msg hidden">Ready to search.</div>
+
+            <div id="progress-container" class="progress-container hidden">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
+
+            <div class="table-container">
+                <table id="results-table">
+                    <thead>
+                        <tr>
+                            <th class="sortable" data-sort="fav">★</th>
+                            <th class="sortable" data-sort="name">Item</th>
+                            <th class="sortable" data-sort="ilvl">iLvl</th>
+                            <th class="sortable" data-sort="world">World</th>
+                            <th class="sortable" data-sort="hq">HQ</th>
+                            <th class="sortable" data-sort="price">Unit Price</th>
+                            <th class="sortable" data-sort="stock" title="Available at this price (Total on market)">
+                                Stock</th>
+                            <th class="sortable" data-sort="seals">Seals</th>
+                            <th class="sortable" data-sort="fcPoints"
+                                title="Free Company Points (XP). HQ gives double!">FC Pts</th>
+                            <th class="sortable" data-sort="ratio" title="Seals per Gil - Higher is better">Efficiency
+                                (Seals/Gil)</th>
+                            <th>Market</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Results here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+    <script src="app.js" type="module"></script>
+    <script src="particles.js"></script>
+</body>
+
+</html>
