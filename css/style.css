@@ -67,9 +67,10 @@ h1 {
 
 /* Glassmorphism Panel */
 .controls {
-    background: var(--bg-panel);
-    backdrop-filter: var(--glass-blur);
-    -webkit-backdrop-filter: var(--glass-blur);
+    background: rgba(22, 27, 34, 0.95);
+    /* Solid-ish background instead of reliance on blur */
+    /* backdrop-filter: var(--glass-blur); <-- CAUSING BUGS? */
+    /* -webkit-backdrop-filter: var(--glass-blur); */
     padding: 2rem;
     border-radius: 16px;
     border: 1px solid var(--border);
@@ -79,17 +80,11 @@ h1 {
     align-items: flex-end;
     margin-bottom: 2.5rem;
     box-shadow: var(--shadow-sm);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    /* transition: transform 0.3s ease, box-shadow 0.3s ease; <-- REMOVED to prevent layout shifts */
     animation: fadeInUp 0.8s 0.2s cubic-bezier(0.2, 0.8, 0.2, 1) both;
     position: relative;
-
-    /* Glassmorphism Panel */
-    .controls {
-        /* ... existing styles ... */
-        position: relative;
-        z-index: 100;
-        /* Increased z-index */
-    }
+    z-index: 100;
+    /* Increased z-index */
 
     /* ... */
 
