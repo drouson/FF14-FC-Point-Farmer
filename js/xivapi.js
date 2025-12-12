@@ -34,14 +34,25 @@ export async function searchTurningItems(minIlvl) {
         ];
     }
 
-    const FIELDS = 'ID,Name,LevelItem,Icon,Rarity,IsUntradable,ItemSearchCategory,EquipSlotCategory';
+const FIELDS = 'ID,Name,LevelItem,Icon,Rarity,IsUntradable,ItemSearchCategory,EquipSlotCategory';
     const limitPerTier = 200; // Increased to get more results
 
     try {
         const promises = ranges.map(range => {
             const query = `LevelItem>=${range.min}+LevelItem<=${range.max}+IsUntradable=0+Rarity>=2`;
-            // Sorting Descending ensures we get the highest level (most valuable) items of each tier first.
-            const url = `${BASE_URL}/search?sheets=Item&query=${query}&fields=${FIELDS}&limit=${limitPerTier}&sort=LevelItem&order=desc`;
+            const queryString = `sheets=Item&query=${query}&fields=${FIELDS}&limit=${limitPerTier}&sort=LevelItem&order=desc`;
+            
+            let url;
+            // Dynamic Proxy Selection
+            if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                // Local Python Proxy
+                url = `/api_proxy/search?${queryString}`;
+            } else {
+                // Public CORS Proxy for GitHub Pages
+                const targetUrl = `https://v2.xivapi.com/api/search?${queryString}`;
+                url = `https://corsproxy.io/?${encodeURIComponent(targetUrl)}`;
+            }
+
             return fetch(url).then(res => res.json()).catch(e => ({ results: [] }));
         });
 
